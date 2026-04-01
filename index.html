@@ -6,82 +6,209 @@
   <title>Para ti 🎧</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+
   <style>
     body {
       margin: 0;
       font-family: 'Poppins', sans-serif;
-      background: url('margaritasLilas.jpeg') no-repeat center center/cover;
       height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
+      overflow: hidden;
       position: relative;
+      cursor: pointer;
     }
 
-```
-/* Capa oscura encima del fondo */
-body::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.55);
-  z-index: 0;
-}
+    /* Fondo animado */
+    body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: url('margaritasLilas.jpeg') no-repeat center center/cover;
+      animation: zoomBg 25s ease-in-out infinite alternate;
+      z-index: 0;
+    }
 
-.card {
-  position: relative;
-  z-index: 1;
-  background: rgba(0,0,0,0.65);
-  padding: 30px;
-  border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-  max-width: 350px;
-  backdrop-filter: blur(6px);
-}
+    body::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 1;
+    }
 
-h1 {
-  font-weight: 500;
-  margin-bottom: 10px;
-  color: #fff;
-}
+    @keyframes zoomBg {
+      from { transform: scale(1); }
+      to { transform: scale(1.15); }
+    }
 
-p {
-  font-weight: 300;
-  margin-bottom: 25px;
-  color: #eee;
-}
+    /* Partículas */
+    .particles {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      overflow: hidden;
+    }
 
-.btn {
-  display: inline-block;
-  padding: 12px 20px;
-  border-radius: 30px;
-  background: #a855f7; /* morado que combina */
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  transition: 0.3s;
-}
+    .particle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: rgba(255,255,255,0.6);
+      border-radius: 50%;
+      animation: floatUp linear infinite;
+    }
 
-.btn:hover {
-  background: #9333ea;
-  transform: scale(1.05);
-}
+    @keyframes floatUp {
+      from {
+        transform: translateY(100vh) scale(0.5);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(-10vh) scale(1);
+        opacity: 1;
+      }
+    }
 
-.emoji {
-  font-size: 40px;
-  margin-bottom: 10px;
-}
-```
+    /* Card */
+    .card {
+      position: relative;
+      z-index: 3;
+      background: rgba(255,255,255,0.08);
+      padding: 30px;
+      border-radius: 20px;
+      max-width: 350px;
+      text-align: center;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+      animation: fadeIn 1.5s ease;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 10px;
+    }
+
+    #text {
+      color: #ddd;
+      min-height: 50px;
+      margin-bottom: 25px;
+    }
+
+    /* Botón glow */
+    .btn {
+      display: inline-block;
+      padding: 12px 22px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: 0 0 20px rgba(168,85,247,0.8);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 15px rgba(168,85,247,0.6); }
+      50% { box-shadow: 0 0 30px rgba(168,85,247,1); }
+    }
+
+    iframe {
+      margin-top: 15px;
+      border-radius: 12px;
+    }
+
+    .emoji {
+      font-size: 42px;
+      margin-bottom: 10px;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
 
   </style>
-</head>
-<body>
 
-<p> ¿Te ves igual de hermosa todos los días? </p> 
-<a class="btn" href="https://open.spotify.com/track/3szOJJOPlOVqfKJtqVkoE2?si=dd17c1e45dc64aae" target="_blank"> Escuchar en Spotify </a> 
-<iframe src="https://open.spotify.com/embed/track/3szOJJOPlOVqfKJtqVkoE2" width="100%" height="352" frameborder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy">
+</head>
+
+<body onclick="openSpotify()">
+
+  <!-- partículas -->
+
+  <div class="particles" id="particles"></div>
+
+  <div class="card">
+    <div class="emoji">🎧</div>
+    <h1>Para ti</h1>
+
+```
+<p id="text"></p>
+
+<a class="btn" 
+   href="https://open.spotify.com/track/3szOJJOPlOVqfKJtqVkoE2" 
+   target="_blank">
+  Escuchar en Spotify
+</a>
+
+<iframe 
+  src="https://open.spotify.com/embed/track/3szOJJOPlOVqfKJtqVkoE2" 
+  width="100%" 
+  height="352"
+  frameborder="0"
+  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture">
 </iframe>
+```
+
+  </div>
+
+  <script>
+    // TYPEWRITER
+    const text = "¿Te ves igual de hermosa todos los días?";
+    let i = 0;
+
+    function typeWriter() {
+      if (i < text.length) {
+        document.getElementById("text").innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeWriter, 40);
+      }
+    }
+
+    typeWriter();
+
+    // PARTÍCULAS
+    const container = document.getElementById("particles");
+
+    for (let i = 0; i < 40; i++) {
+      const p = document.createElement("div");
+      p.classList.add("particle");
+
+      p.style.left = Math.random() * 100 + "vw";
+      p.style.animationDuration = (5 + Math.random() * 10) + "s";
+      p.style.opacity = Math.random();
+
+      container.appendChild(p);
+    }
+
+    // CLICK GLOBAL
+    function openSpotify() {
+      window.open("https://open.spotify.com/track/3szOJJOPlOVqfKJtqVkoE2", "_blank");
+    }
+  </script>
 
 </body>
 </html>
